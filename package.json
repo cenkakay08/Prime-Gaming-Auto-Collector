@@ -1,0 +1,20 @@
+{
+  "name": "prime-gaming-auto-collector",
+  "description": "Collect the Prime Gaming Rewards Automatically",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "convert": "tsc index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.4.10",
+    "chrome-types": "^0.1.222"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  },
+  "type": "module"
+}

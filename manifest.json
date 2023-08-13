@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Prime Game Auto Collector",
+  "description": "Collect the Prime Gaming Rewards Automatically",
+  "version": "1.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "js": ["index.js"],
+      "matches": [
+        "https://gaming.amazon.com/",
+        "https://gaming.amazon.com/home",
+        "https://gaming.amazon.com/*/dp/*"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
