@@ -19,7 +19,7 @@ async function visitTabs() {
   }
 }
 
-async function pressButton(type: "InGameLoot" | "Game" | "Collect") {
+async function pressButton(type: "InGameLoot" | "Game") {
   let isButtonClicked = false;
 
   while (!isButtonClicked) {
@@ -78,26 +78,42 @@ async function openLootTabs(tab: "InGameLoot" | "Game") {
     | HTMLButtonElement
   )[]) {
     const href = buttonOrAnchor.getAttribute("href");
-    href ? window.open(href, "_blank") : buttonOrAnchor.click();
+    console.log(href);
+    href
+      ? await chrome.tabs.create({
+          active: false,
+          url: "https://gaming.amazon.com/" + href,
+        })
+      : buttonOrAnchor.click();
 
     await wait(100);
   }
 }
 
 async function collectLoot() {
-  await pressButton("Collect");
+  let isClaimed = false;
 
-  let isStateJustClaimed = false;
-
-  while (!isStateJustClaimed) {
+  while (!isClaimed) {
     const stateJustClaimed = document.querySelector(
       '[data-a-target="header-state_JustClaimed"]'
     )!;
 
-    if (stateJustClaimed) {
-      isStateJustClaimed = true;
+    const statePreviouslyClaimed = document.querySelector(
+      '[data-a-target="header-state_PreviouslyClaimed"]'
+    )!;
+
+    const stateDateClaimed = document.querySelector(
+      '[data-a-target="ClaimStateQuantityAndDateContent"]'
+    )!;
+
+    if (stateJustClaimed || statePreviouslyClaimed || stateDateClaimed) {
+      isClaimed = true;
     } else {
-      isStateJustClaimed = false;
+      isClaimed = false;
+
+      try {
+        (await checkButtonInPromise("Collect")).click();
+      } catch (error) {}
     }
 
     await wait(100);

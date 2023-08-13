@@ -160,57 +160,79 @@ function scrollPageToBottom() {
 }
 function openLootTabs(tab) {
     return __awaiter(this, void 0, void 0, function () {
-        var tabElement, buttonsOrAnchors, _i, _a, buttonOrAnchor, href;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var tabElement, buttonsOrAnchors, _i, _a, buttonOrAnchor, href, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
                     tabElement = document.querySelector(tab === "InGameLoot"
                         ? '[data-a-target="offer-list-IN_GAME_LOOT"]'
                         : '[data-a-target="offer-list-FGWP_FULL"]');
                     buttonsOrAnchors = tabElement.querySelectorAll('[class="tw-interactive tw-button"]');
                     _i = 0, _a = Array.from(buttonsOrAnchors);
-                    _b.label = 1;
+                    _c.label = 1;
                 case 1:
-                    if (!(_i < _a.length)) return [3 /*break*/, 4];
+                    if (!(_i < _a.length)) return [3 /*break*/, 7];
                     buttonOrAnchor = _a[_i];
                     href = buttonOrAnchor.getAttribute("href");
-                    href ? window.open(href, "_blank") : buttonOrAnchor.click();
-                    return [4 /*yield*/, wait(100)];
+                    console.log(href);
+                    if (!href) return [3 /*break*/, 3];
+                    return [4 /*yield*/, chrome.tabs.create({
+                            active: false,
+                            url: "https://gaming.amazon.com/" + href,
+                        })];
                 case 2:
-                    _b.sent();
-                    _b.label = 3;
+                    _b = _c.sent();
+                    return [3 /*break*/, 4];
                 case 3:
+                    _b = buttonOrAnchor.click();
+                    _c.label = 4;
+                case 4:
+                    _b;
+                    return [4 /*yield*/, wait(100)];
+                case 5:
+                    _c.sent();
+                    _c.label = 6;
+                case 6:
                     _i++;
                     return [3 /*break*/, 1];
-                case 4: return [2 /*return*/];
+                case 7: return [2 /*return*/];
             }
         });
     });
 }
 function collectLoot() {
     return __awaiter(this, void 0, void 0, function () {
-        var isStateJustClaimed, stateJustClaimed;
+        var isClaimed, stateJustClaimed, statePreviouslyClaimed, stateDateClaimed, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, pressButton("Collect")];
+                case 0:
+                    isClaimed = false;
+                    _a.label = 1;
                 case 1:
-                    _a.sent();
-                    isStateJustClaimed = false;
-                    _a.label = 2;
-                case 2:
-                    if (!!isStateJustClaimed) return [3 /*break*/, 4];
+                    if (!!isClaimed) return [3 /*break*/, 8];
                     stateJustClaimed = document.querySelector('[data-a-target="header-state_JustClaimed"]');
-                    if (stateJustClaimed) {
-                        isStateJustClaimed = true;
-                    }
-                    else {
-                        isStateJustClaimed = false;
-                    }
-                    return [4 /*yield*/, wait(100)];
+                    statePreviouslyClaimed = document.querySelector('[data-a-target="header-state_PreviouslyClaimed"]');
+                    stateDateClaimed = document.querySelector('[data-a-target="ClaimStateQuantityAndDateContent"]');
+                    if (!(stateJustClaimed || statePreviouslyClaimed || stateDateClaimed)) return [3 /*break*/, 2];
+                    isClaimed = true;
+                    return [3 /*break*/, 6];
+                case 2:
+                    isClaimed = false;
+                    _a.label = 3;
                 case 3:
-                    _a.sent();
-                    return [3 /*break*/, 2];
+                    _a.trys.push([3, 5, , 6]);
+                    return [4 /*yield*/, checkButtonInPromise("Collect")];
                 case 4:
+                    (_a.sent()).click();
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_2 = _a.sent();
+                    return [3 /*break*/, 6];
+                case 6: return [4 /*yield*/, wait(100)];
+                case 7:
+                    _a.sent();
+                    return [3 /*break*/, 1];
+                case 8:
                     window.close();
                     return [2 /*return*/];
             }
